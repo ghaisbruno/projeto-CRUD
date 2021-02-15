@@ -1,0 +1,37 @@
+{
+  "name": "Divida",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "JSONPlaceholderID": {
+      "type": "string",
+      "required": true
+    },
+    "MotivoDivida": {
+      "type": "string",
+      "required": true
+    },
+    "DataDivida": {
+      "type": "date",
+      "required": true
+    },
+    "Valor": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY"
+    }
+  ],
+  "methods": {}
+}
