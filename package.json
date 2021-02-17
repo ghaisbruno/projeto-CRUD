@@ -6,9 +6,8 @@
     "node": ">=6"
   },
   "scripts": {
-    "lint": "eslint .",
-    "start": "node .",
-    "posttest": "npm run lint"
+    "start": "node . & cd client_src && yarn start",
+    "fresh-start": "yarn install && cd client_src && yarn install"
   },
   "dependencies": {
     "compression": "^1.0.3",
