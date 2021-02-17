@@ -2,10 +2,14 @@
 
 ![App example](client_src/public/app-example.png)
 
-# Dependencias e Instalacao
+# Dependências e Instalação (Linux)
 
 - [nodejs](https://nodejs.org/pt-br/)
     `sudo apt install nodejs`
+- [nvm](https://github.com/nvm-sh/nvm#install--update-script)
+    `wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash && source ~/.bashrc`
+- configurar a versao do node
+    `nvm install v14.15.5 && nvm use v14.15.5`
 - [loopback 3](https://loopback.io/doc/en/lb3/)
     `npm install -g loopback-cli`
 - [yarn](https://yarnpkg.com/)
@@ -17,13 +21,13 @@
 
 # First run
 
-Na pasta raiz, eh so rodar o seguinte comando:
+Na pasta raiz, é só rodar o seguinte comando:
 
 `yarn fresh-start`
 
 para instalar os pacotes tanto pro node quanto pro react.
 
-E apos isso eh so rodar o comando:
+E após isso é só rodar o comando:
 
 `yarn start`
 
