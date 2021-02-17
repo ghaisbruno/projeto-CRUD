@@ -45,6 +45,7 @@ class Divida extends Component {
             return user.name;
         });
 
+
         const { value: formValues } = await Swal.fire({
             title: 'Cadastrar Divida',
             input: 'select',
@@ -55,7 +56,7 @@ class Divida extends Component {
             allowOutsideClick: false,
             html:
                 '<a>Motivo:</a><input id="MotivoDivida" class="swal2-input">' +
-                '<a>Valor:</a><span class="money-format">R$</span>'+
+                '<a>Valor:</a><span class="money-format">R$</span>' +
                 '<input id="Valor" class="swal2-input" onkeypress="$(this).mask(\'R$ #.###.##0,00\', {reverse: true});">' +
                 '<a>Data:</a><input type="date" id="DataDivida" class="swal2-input">' +
                 '<br>' +
@@ -63,16 +64,33 @@ class Divida extends Component {
             focusConfirm: false,
             preConfirm: (formValues) => {
                 let buffer = parseInt(formValues) + 1;
+                let date;
                 let money = document.getElementById('Valor').value;
                 money = money.replace('.', ''); //remove os pontos na casa do milhar
                 money = money.replace(',', '.'); //substitui a virgula por ponto para transformar em float
-                let date = new Date(document.getElementById('DataDivida').value+'T00:00:00');
-                return [
-                    buffer,
-                    document.getElementById('MotivoDivida').value,
-                    parseFloat(money),
-                    date.toISOString()
-                ]
+                try {
+                    if (document.getElementById('DataDivida').value !== '') {
+                        date = new Date(document.getElementById('DataDivida').value + 'T00:00:00');
+                    } else {
+                        throw 'err';
+                    }
+                    return [
+                        buffer,
+                        document.getElementById('MotivoDivida').value,
+                        parseFloat(money),
+                        date.toISOString()
+                    ]
+                } catch (err) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Aconteceu algo de errado, tente novamente!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload()
+                        }
+                    })
+                }
             }
         })
 
@@ -156,22 +174,35 @@ class Divida extends Component {
                     allowOutsideClick: false,
                     html:
                         '<a>Motivo:</a><input id="MotivoDivida" class="swal2-input" value="' + response.data.MotivoDivida + '" placeholder="Motivo da divida">' +
-                        '<a>Valor:</a><span class="money-format">R$</span>'+
+                        '<a>Valor:</a><span class="money-format">R$</span>' +
                         '<input id="Valor" class="swal2-input" placeholder="Valor em reais" value="' + numberFormat(response.data.Valor, { minimumFractionDigits: 2 }) + '" onkeypress="$(this).mask(\'R$ #.###.##0,00\', {reverse: true});">' +
-                        '<a>Data:</a><input type="date" id="DataDivida" value="' + response.data.DataDivida.replace('T03:00:00.000Z','') + '"class="swal2-input">',
+                        '<a>Data:</a><input type="date" id="DataDivida" value="' + response.data.DataDivida.replace('T03:00:00.000Z', '') + '"class="swal2-input">',
                     focusConfirm: false,
                     preConfirm: (formValues) => {
                         let buffer = parseInt(formValues) + 1;
+                        let date;
                         let money = document.getElementById('Valor').value;
                         money = money.replace('.', ''); //remove os pontos na casa do milhar
                         money = money.replace(',', '.'); //substitui a virgula por ponto para transformar em float
-                        let date = new Date(document.getElementById('DataDivida').value+'T00:00:00');
-                        return [
-                            buffer,
-                            document.getElementById('MotivoDivida').value,
-                            parseFloat(money),
-                            date.toISOString()
-                        ]
+                        try {
+                            date = new Date(document.getElementById('DataDivida').value + 'T00:00:00');
+                            return [
+                                buffer,
+                                document.getElementById('MotivoDivida').value,
+                                parseFloat(money),
+                                date.toISOString()
+                            ]
+                        } catch (err) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Data invalida, tente novamente!'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload()
+                                }
+                            })
+                        }
                     }
                 })
                 if (formValues) {
