@@ -4,15 +4,15 @@
 
 # Dependencias e Instalacao
 
-- nodejs
+- [nodejs](https://nodejs.org/pt-br/)
     `sudo apt install nodejs`
-- loopback
+- [loopback 3](https://loopback.io/doc/en/lb3/)
     `npm install -g loopback-cli`
-- yarn
+- [yarn](https://yarnpkg.com/)
     `npm install --global yarn`
-- mongodb
+- [mongodb](https://www.mongodb.com/)
     `sudo apt install mongodb`
-- react
+- [react](https://reactjs.org/)
     `npm install -g create-react-app`
 
 # First run
