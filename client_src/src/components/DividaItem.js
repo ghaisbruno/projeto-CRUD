@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import '../App.css';
 import Divida from './Dividas'
-import { numberFormat, dateFormat} from '../helpers/Format'
+import { numberFormat, dateFormat } from '../helpers/Format'
 
 class DividaItem extends Component {
     constructor(props) {
@@ -29,10 +29,13 @@ class DividaItem extends Component {
 
     render() {
         return (
-            <tr onClick={() => {Divida.escolherOpcao(this.state.item.id)}}>
+            <tr onClick={() => { Divida.escolherOpcao(this.state.item.id) }}>
                 <td>{this.state.user.name}</td>
                 <td>{this.state.item.MotivoDivida}</td>
-                <td>{numberFormat(this.state.item.Valor)}</td>
+                <td>{numberFormat(this.state.item.Valor, {
+                    style: 'currency',
+                    currency: 'BRL'
+                })}</td>
                 <td>{dateFormat(new Date(this.state.item.DataDivida))}</td>
             </tr>
         )

@@ -1,3 +1,14 @@
 .tb-margin{
     margin: 3px 0px 20px 5px;
 }
+
+#Valor{
+    padding-left: 30px;
+    width: 330px;
+}
+
+.money-format {
+    position: relative;
+    right: 190px;
+    top: 30px;
+}

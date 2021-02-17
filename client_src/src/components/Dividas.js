@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import DividaItem from './DividaItem';
+import { numberFormat } from '../helpers/Format'
 import '../App.css';
 
 class Divida extends Component {
@@ -54,17 +55,21 @@ class Divida extends Component {
             allowOutsideClick: false,
             html:
                 '<a>Motivo:</a><input id="MotivoDivida" class="swal2-input" placeholder="Motivo da divida">' +
-                '<a>Valor:</a><input id="Valor" class="swal2-input" placeholder="Valor em reais">' +
+                '<a>Valor:</a><span class="money-format">R$</span>'+
+                '<input id="Valor" class="swal2-input" placeholder="Valor em reais" onkeypress="$(this).mask(\'R$ #.###.##0,00\', {reverse: true});">' +
                 '<a>Data:</a><input type="date" id="DataDivida" class="swal2-input">' +
                 '<br>' +
                 '<a>Cliente:</a>',
             focusConfirm: false,
             preConfirm: (formValues) => {
                 let buffer = parseInt(formValues) + 1;
+                let money = document.getElementById('Valor').value;
+                money = money.replace('.', ''); //remove os pontos na casa do milhar
+                money = money.replace(',', '.'); //substitui a virgula por ponto para transformar em float
                 return [
                     buffer,
                     document.getElementById('MotivoDivida').value,
-                    parseFloat(document.getElementById('Valor').value),
+                    parseFloat(money),
                     document.getElementById('DataDivida').value
                 ]
             }
@@ -78,7 +83,7 @@ class Divida extends Component {
                 Valor: formValues[2],
                 DataDivida: formValues[3]
             }
-
+            console.log(formToSend)
             await axios.post('http://localhost:3000/api/Dividas', formToSend)
                 .then(Swal.fire({
                     position: 'center-mid',
@@ -152,15 +157,19 @@ class Divida extends Component {
                     allowOutsideClick: false,
                     html:
                         '<a>Motivo:</a><input id="MotivoDivida" class="swal2-input" value="' + response.data.MotivoDivida + '" placeholder="Motivo da divida">' +
-                        '<a>Valor:</a><input id="Valor" class="swal2-input" value="' + response.data.Valor + '" placeholder="Valor em reais">' +
+                        '<a>Valor:</a><span class="money-format">R$</span>'+
+                        '<input id="Valor" class="swal2-input" placeholder="Valor em reais" value="' + numberFormat(response.data.Valor, { minimumFractionDigits: 2 }) + '" onkeypress="$(this).mask(\'R$ #.###.##0,00\', {reverse: true});">' +
                         '<a>Data:</a><input type="date" id="DataDivida" value="' + response.data.DataDivida + '"class="swal2-input">',
                     focusConfirm: false,
                     preConfirm: (formValues) => {
                         let buffer = parseInt(formValues) + 1;
+                        let money = document.getElementById('Valor').value;
+                        money = money.replace('.', ''); //remove os pontos na casa do milhar
+                        money = money.replace(',', '.'); //substitui a virgula por ponto para transformar em float
                         return [
                             buffer,
                             document.getElementById('MotivoDivida').value,
-                            parseFloat(document.getElementById('Valor').value),
+                            parseFloat(money),
                             document.getElementById('DataDivida').value
                         ]
                     }
