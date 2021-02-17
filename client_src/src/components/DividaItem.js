@@ -29,18 +29,12 @@ class DividaItem extends Component {
 
     render() {
         return (
-            <tr onClick={() => {Divida.editarDivida(this.state.item.id)}}>
+            <tr onClick={() => {Divida.escolherOpcao(this.state.item.id)}}>
                 <td>{this.state.user.name}</td>
                 <td>{this.state.item.MotivoDivida}</td>
                 <td>{numberFormat(this.state.item.Valor)}</td>
                 <td>{dateFormat(new Date(this.state.item.DataDivida))}</td>
             </tr>
-            // <ul className="column-list">
-            //     <li className="collection-item">
-            //         <Link to={`/dividas/${this.state.item.id}`}>
-            //             {this.state.user.name}</Link>
-            //     </li>
-            // </ul>
         )
     }
 }

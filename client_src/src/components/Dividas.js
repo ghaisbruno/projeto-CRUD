@@ -101,86 +101,72 @@ class Divida extends Component {
         }
     }
 
-    static async editarDivida(id) {
-        await axios.get(`http://localhost:3000/api/Dividas/${id}`)
-            .then(async (response) => {
-                const { value: formValues } =  await Swal.fire({
-                    title: 'Editar Cliente',
-                    confirmButtonText: 'Editar',
-                    showDenyButton: true,
-                    denyButtonText: `Deletar`,
-                    showCancelButton: 'true',
-                    cancelButtonText: 'Cancelar',
-                    allowOutsideClick: false,
-                    html:
-                        '<a>Motivo:</a><input id="MotivoDivida" class="swal2-input" value="'+response.data.MotivoDivida+'" placeholder="Motivo da divida">' +
-                        '<a>Valor:</a><input id="Valor" class="swal2-input" value="'+response.data.Valor+'" placeholder="Valor em reais">' +
-                        '<a>Data:</a><input type="date" id="DataDivida" value="'+response.data.DataDivida+'"class="swal2-input">',
-                    focusConfirm: false,
-                    preConfirm: (formValues) => {
-                        let buffer = parseInt(formValues) + 1;
-                        return [
-                            buffer,
-                            document.getElementById('MotivoDivida').value,
-                            parseFloat(document.getElementById('Valor').value),
-                            document.getElementById('DataDivida').value
-                        ]
+    static escolherOpcao(id){
+        Swal.fire({
+            title: 'O que deseja fazer?',
+            confirmButtonText: 'Editar Cliente',
+            denyButtonText: 'Deletar Cliente',
+            showDenyButton: true,
+            showCloseButton: true,
+            cancelButtonText: 'Cancelar'
+        })
+        .then((result) => {
+            if (result.isConfirmed){
+                Divida.editarDivida(id)
+            }else if(result.isDenied){
+                Swal.fire({
+                    title: 'Tem Certeza?',
+                    text: "Se deletar um cliente nao vai poder recuperar ele de volta!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sim, pode deletar!',
+                    cancelButtonText: 'Cancelar!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Divida.deletarDivida(id)
+                    } else if (
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        Swal.fire(
+                            'Cancelado',
+                            'Pode ficar tranquilo, nada vai ser deletado',
+                            'error'
+                        )
                     }
                 })
-                console.log(formValues)
-                // if (formValues) {
-                //     let formToSend =
-                //     {
-                //         JSONPlaceholderID: formValues[0],
-                //         MotivoDivida: formValues[1],
-                //         Valor: formValues[2],
-                //         DataDivida: formValues[3]
-                //     }
-        
-                //     console.log(formToSend)
-                //     axios.put(`http://localhost:3000/api/Dividas/${id}`, formToSend)
-                //         .then(Swal.fire({
-                //             position: 'center-mid',
-                //             icon: 'success',
-                //             title: 'Cliente Editado',
-                //             showConfirmButton: true,
-                //         }).then((result) => {
-                //             if (result.isConfirmed) {
-                //                 window.location.reload()
-                //             }
-                //         }))
-                //         .catch(err => console.log(err))
-                // }
+            }
+        })
+    }
+
+    static async editarDivida(id) {
+        await axios.get(`http://localhost:3000/api/Dividas/${id}`)
+            .then((response) => {
+                console.log(response.data)
             })
             .catch(err => console.log(err));
     }
 
-    async deletarDivida(id) {
-        //on Delete  
-        Swal.fire({
-            title: 'Tem Certeza?',
-            text: "Se deletar um cliente nao vai poder recuperar ele de volta!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sim, pode deletar!',
-            cancelButtonText: 'Cancelar!',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Deletado!',
-                    'O cliente foi deletado com sucesso.',
-                    'success'
-                )
-            } else if (
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-                Swal.fire(
-                    'Cancelado',
-                    'Pode ficar tranquilo, nada vai ser deletado',
-                    'error'
-                )
-            }
+    static async deletarDivida(id) {
+        await axios.delete(`http://localhost:3000/api/Dividas/${id}`)
+        .then((response) => {
+            Swal.fire(
+                'Deletado!',
+                'O cliente foi deletado com sucesso.',
+                'success'
+            ).then(result => {
+                if(result.isConfirmed){
+                    window.location.reload()
+                }
+            })
+        })
+        .catch(err => {
+            console.log(err)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Alguma coisa deu errado, tente novamente!'
+              })
         })
     }
 
